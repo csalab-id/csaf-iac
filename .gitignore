@@ -1,0 +1,39 @@
+# Ignore macos .DS_Store
+.DS_Store
+
+# Ignore alicloud cache
+alicloud/.terraform*
+alicloud/terraform.tfstate*
+
+# Ignore aws cache
+aws/.terraform*
+aws/terraform.tfstate*
+
+# Ignore azure cache
+azure/.terraform*
+azure/terraform.tfstate*
+
+# Ignore digitalocean cache
+digitalocean/.terraform*
+digitalocean/terraform.tfstate*
+digitalocean/stored
+
+# Ignore gcp cache
+gcp/.terraform*
+gcp/terraform.tfstate*
+
+# Ignore linode cache
+linode/.terraform*
+linode/terraform.tfstate*
+
+# Ignore tencent cache
+tencent/.terraform*
+tencent/terraform.tfstate*
+
+# Ignore upcloud cache
+upcloud/.terraform*
+upcloud/terraform.tfstate*
+
+# Ignore vultr cache
+vultr/.terraform*
+vultr/terraform.tfstate*
