@@ -18,6 +18,8 @@ provider  "linode" {
   # token = "yourtoken"
 }
 
+data "linode_profile" "csalab" {}
+
 resource "linode_sshkey" "csalab" {
   label   = var.name
   ssh_key = chomp(file("../csalab_rsa.pub"))
@@ -32,13 +34,35 @@ resource "linode_stackscript" "csalab" {
 }
 
 resource "linode_instance"  "csalab" {
-  image           = "linode/ubuntu22.04"
-  label           = var.name
-  group           = var.name
-  region          = var.region
-  type            = var.package
-  authorized_keys = [ linode_sshkey.csalab.ssh_key ]
-  stackscript_id  = linode_stackscript.csalab.id
+  label          = var.name
+  group          = var.name
+  region         = var.region
+  type           = var.package
+}
+
+resource "linode_instance_disk" "csalab" {
+  label            = "boot"
+  linode_id        = linode_instance.csalab.id
+  size             = 100000 # 100 GB
+  image            = "linode/ubuntu22.04"
+  authorized_keys  = [linode_sshkey.csalab.ssh_key]
+  authorized_users = [data.linode_profile.csalab.username]
+  root_pass        = "CSA_Admin"
+  stackscript_id   = linode_stackscript.csalab.id
+}
+
+resource "linode_instance_config" "boot_config" {
+  label       = "boot_config"
+  linode_id   = linode_instance.csalab.id
+  root_device = "/dev/sda"
+  kernel      = "linode/latest-64bit"
+  booted      = true
+
+  devices {
+    sda {
+      disk_id = linode_instance_disk.csalab.id
+    }
+  }
 }
 
 resource "linode_firewall" "csalab" {
@@ -56,26 +80,10 @@ resource "linode_firewall" "csalab" {
   }
 
   inbound {
-    label    = "attack"
+    label    = "csalab"
     action   = "ACCEPT"
     protocol = "TCP"
-    ports    = "6080"
-    ipv4     = ["0.0.0.0/0"]
-  }
-
-  inbound {
-    label    = "defence"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "7080"
-    ipv4     = ["0.0.0.0/0"]
-  }
-
-  inbound {
-    label    = "monitor"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "8080"
+    ports    = "6080-8080"
     ipv4     = ["0.0.0.0/0"]
   }
 }

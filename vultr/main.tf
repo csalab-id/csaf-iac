@@ -58,25 +58,7 @@ resource "vultr_firewall_rule" "attack" {
   protocol          = "tcp"
   subnet            = "0.0.0.0"
   subnet_size       = 0
-  port              = "6080"
-  ip_type           = "v4"
-}
-
-resource "vultr_firewall_rule" "defence" {
-  firewall_group_id = vultr_firewall_group.csalab.id
-  protocol          = "tcp"
-  subnet            = "0.0.0.0"
-  subnet_size       = 0
-  port              = "7080"
-  ip_type           = "v4"
-}
-
-resource "vultr_firewall_rule" "monitor" {
-  firewall_group_id = vultr_firewall_group.csalab.id
-  protocol          = "tcp"
-  subnet            = "0.0.0.0"
-  subnet_size       = 0
-  port              = "8080"
+  port              = "6080-8080"
   ip_type           = "v4"
 }
 

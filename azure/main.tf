@@ -119,40 +119,14 @@ resource "azurerm_network_security_group" "csalab" {
   }
 
   security_rule {
-    name                       = "attack"
-    description                = "Allow attack access"
+    name                       = "csalab"
+    description                = "Allow csalab access"
     priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "6080"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "defence"
-    description                = "Allow defence access"
-    priority                   = 120
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "7080"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "monitor"
-    description                = "Allow monitor access"
-    priority                   = 130
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "8080"
+    destination_port_range     = "6080-8080"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

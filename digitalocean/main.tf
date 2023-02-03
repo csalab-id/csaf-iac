@@ -50,23 +50,7 @@ resource "digitalocean_firewall" "csalab" {
 
   inbound_rule {
     protocol         = "tcp"
-    port_range       = "6080"
-    source_addresses = [
-      "0.0.0.0/0",
-    ]
-  }
-
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "7080"
-    source_addresses = [
-      "0.0.0.0/0",
-    ]
-  }
-
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "8080"
+    port_range       = "6080-8080"
     source_addresses = [
       "0.0.0.0/0",
     ]

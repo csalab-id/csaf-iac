@@ -14,7 +14,7 @@ terraform {
 
 provider "google" {
   # Generate Service Account from: https://console.cloud.google.com/iam-admin/serviceaccounts
-  # export GOOGLE_APPLICATION_CREDENTIALS='yourcredentialfile.json'
+  # export GOOGLE_APPLICATION_CREDENTIALS="yourcredentialfile.json"
   # credentials = file("yourcredentialfile.json")
   project = var.project
   region  = var.region

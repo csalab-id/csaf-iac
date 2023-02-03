@@ -21,6 +21,7 @@ digitalocean/stored
 # Ignore gcp cache
 gcp/.terraform*
 gcp/terraform.tfstate*
+gcp/credential.json
 
 # Ignore linode cache
 linode/.terraform*
@@ -37,3 +38,13 @@ upcloud/terraform.tfstate*
 # Ignore vultr cache
 vultr/.terraform*
 vultr/terraform.tfstate*
+
+# Ignore ovh cache
+ovh/.terraform*
+ovh/terraform.tfstate*
+ovh/clouds.yaml
+
+# Ignore biznet cache
+biznet/.terraform*
+biznet/terraform.tfstate*
+biznet/clouds.yaml

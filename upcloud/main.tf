@@ -13,10 +13,11 @@ terraform {
 }
 
 provider "upcloud" {
-    # export UPCLOUD_USERNAME="yourusername"
-    # export UPCLOUD_PASSWORD="yourpassword"
-    # username = "yourusername"
-    # password = "yourpassword"
+  # Register from here: https://signup.upcloud.com/
+  # export UPCLOUD_USERNAME="yourusername"
+  # export UPCLOUD_PASSWORD="yourpassword"
+  # username = "yourusername"
+  # password = "yourpassword"
 }
 
 resource "upcloud_server" "csalab" {
@@ -59,8 +60,8 @@ resource "upcloud_firewall_rules" "csalab" {
     action                    = "accept"
     destination_address_end   = "255.255.255.255"
     destination_address_start = "0.0.0.0"
-    destination_port_end      = "22"
     destination_port_start    = "22"
+    destination_port_end      = "22"
     direction                 = "in"
     family                    = "IPv4"
     protocol                  = "tcp"
@@ -70,30 +71,8 @@ resource "upcloud_firewall_rules" "csalab" {
     action                    = "accept"
     destination_address_end   = "255.255.255.255"
     destination_address_start = "0.0.0.0"
-    destination_port_end      = "6080"
     destination_port_start    = "6080"
-    direction                 = "in"
-    family                    = "IPv4"
-    protocol                  = "tcp"
-  }
-
-  firewall_rule {
-    action                    = "accept"
-    destination_address_end   = "255.255.255.255"
-    destination_address_start = "0.0.0.0"
-    destination_port_end      = "7080"
-    destination_port_start    = "7080"
-    direction                 = "in"
-    family                    = "IPv4"
-    protocol                  = "tcp"
-  }
-
-  firewall_rule {
-    action                    = "accept"
-    destination_address_end   = "255.255.255.255"
-    destination_address_start = "0.0.0.0"
     destination_port_end      = "8080"
-    destination_port_start    = "8080"
     direction                 = "in"
     family                    = "IPv4"
     protocol                  = "tcp"

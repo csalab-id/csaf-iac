@@ -44,38 +44,14 @@ resource "alicloud_security_group_rule" "ssh" {
   cidr_ip           = "0.0.0.0/0"
 }
 
-resource "alicloud_security_group_rule" "attack" {
-  description       = "Attack Rule"
+resource "alicloud_security_group_rule" "csalab" {
+  description       = "CSA Lab Rule"
   type              = "ingress"
   ip_protocol       = "tcp"
   nic_type          = "intranet"
   policy            = "accept"
-  port_range        = "6080/6080"
+  port_range        = "6080/8080"
   priority          = 2
-  security_group_id = alicloud_security_group.csalab.id
-  cidr_ip           = "0.0.0.0/0"
-}
-
-resource "alicloud_security_group_rule" "defence" {
-  description       = "Defence Rule"
-  type              = "ingress"
-  ip_protocol       = "tcp"
-  nic_type          = "intranet"
-  policy            = "accept"
-  port_range        = "7080/7080"
-  priority          = 3
-  security_group_id = alicloud_security_group.csalab.id
-  cidr_ip           = "0.0.0.0/0"
-}
-
-resource "alicloud_security_group_rule" "monitoring" {
-  description       = "Monitoring Rule"
-  type              = "ingress"
-  ip_protocol       = "tcp"
-  nic_type          = "intranet"
-  policy            = "accept"
-  port_range        = "8080/8080"
-  priority          = 4
   security_group_id = alicloud_security_group.csalab.id
   cidr_ip           = "0.0.0.0/0"
 }
