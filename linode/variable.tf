@@ -15,5 +15,5 @@ variable "package" {
 
 variable "domain" {
   type    = string
-  default = "csalab.id"
+  default = "csalab.cloud"
 }

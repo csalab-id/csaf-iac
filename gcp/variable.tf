@@ -25,5 +25,5 @@ variable "zone" {
 
 variable "domain" {
   type    = string
-  default = "csalab.id"
+  default = "csalab.cloud"
 }

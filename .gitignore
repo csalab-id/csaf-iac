@@ -48,3 +48,7 @@ ovh/clouds.yaml
 biznet/.terraform*
 biznet/terraform.tfstate*
 biznet/clouds.yaml
+
+# Ignore hetzner cache
+hetzner/.terraform*
+hetzner/terraform.tfstate*

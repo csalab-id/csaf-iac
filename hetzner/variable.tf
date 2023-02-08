@@ -10,10 +10,15 @@ variable "domain" {
 
 variable "package" {
   type    = string
-  default = "s-4vcpu-8gb-intel"
+  default = "cpx31"
 }
 
-variable "region" {
+variable "location" {
   type    = string
-  default = "sgp1"
+  default = "ash"
+}
+
+variable "zone" {
+  type    = string
+  default = "us-east"
 }
