@@ -52,3 +52,11 @@ biznet/clouds.yaml
 # Ignore hetzner cache
 hetzner/.terraform*
 hetzner/terraform.tfstate*
+
+# Ignore civo cache
+civo/.terraform*
+civo/terraform.tfstate*
+
+# Ignore hiawei cache
+huawei/.terraform*
+huawei/terraform.tfstate*

@@ -5,7 +5,7 @@ variable "name" {
 
 variable "package" {
   type    = string
-  default = "t2.xlarge" # "t2.micro"
+  default = "t2.xlarge"
 }
 
 variable "region" {
