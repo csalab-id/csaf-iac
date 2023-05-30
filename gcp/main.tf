@@ -14,8 +14,15 @@ terraform {
 
 provider "google" {
   # Generate Service Account from: https://console.cloud.google.com/iam-admin/serviceaccounts
+  # Using file example:
   # export GOOGLE_APPLICATION_CREDENTIALS="yourcredentialfile.json"
   # credentials = file("yourcredentialfile.json")
+  #
+  # Using string example:
+  # export GOOGLE_CREDENTIALS='{"your": "credentialstring"}'
+  # credentials = <<-EOT
+  # {"your": "credentialstring"}
+  # EOT
   project = var.project
   region  = var.region
   zone    = var.zone

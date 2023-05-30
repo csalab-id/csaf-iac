@@ -1,6 +1,6 @@
 variable "project" {
   type    = string
-  default = "csalab-000000" # Change with your project name
+  default = ""
 }
 
 variable "name" {
