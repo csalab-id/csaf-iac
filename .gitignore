@@ -60,3 +60,9 @@ civo/terraform.tfstate*
 # Ignore hiawei cache
 huawei/.terraform*
 huawei/terraform.tfstate*
+
+ibm/.terraform*
+ibm/terraform.tfstate*
+
+scaleway/.terraform*
+scaleway/terraform.tfstate*

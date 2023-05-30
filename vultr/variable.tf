@@ -5,7 +5,7 @@ variable "name" {
 
 variable "plan" {
   type    = string
-  default = "vc2-4c-8gb"
+  default = "vc2-8c-16gb"
 }
 
 variable "region" {

@@ -5,7 +5,7 @@ variable "name" {
 
 variable "package" {
   type    = string
-  default = "S3.LARGE8"
+  default = "S3.2XLARGE16"
 }
 
 variable "availability_zone" {

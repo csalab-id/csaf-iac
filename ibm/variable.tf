@@ -1,21 +1,21 @@
 variable "name" {
   type    = string
-  default = "csalab"
-}
-
-variable "package" {
-  type    = string
-  default = "c5.2xlarge"
-}
-
-variable "region" {
-  type    = string
-  default = "ap-southeast-1"
+  default = "development"
 }
 
 variable "zone" {
   type    = string
-  default = "ap-southeast-1a"
+  default = "us-south-1"
+}
+
+variable "region" {
+  type    = string
+  default = "us-south"
+}
+
+variable "package" {
+  type    = string
+  default = "cx2-8x16"
 }
 
 variable "domain" {

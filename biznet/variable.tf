@@ -5,7 +5,7 @@ variable "name" {
 
 variable "package" {
   type    = string
-  default = "SM8.8"
+  default = "SL12.8"
 }
 
 variable "domain" {

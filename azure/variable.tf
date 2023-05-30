@@ -10,7 +10,7 @@ variable "location" {
 
 variable "package" {
   type    = string
-  default = "Standard_D4s_v3"
+  default = "F8s_v2"
 }
 
 variable "domain" {

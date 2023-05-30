@@ -15,5 +15,5 @@ variable "region" {
 
 variable "package" {
   type    = string
-  default = "g3.large"
+  default = "g3.xlarge"
 }

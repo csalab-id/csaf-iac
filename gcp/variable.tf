@@ -10,7 +10,7 @@ variable "name" {
 
 variable "package" {
   type    = string
-  default = "e2-standard-4"
+  default = "c3-highcpu-8"
 }
 
 variable "region" {

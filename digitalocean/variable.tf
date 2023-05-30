@@ -10,7 +10,7 @@ variable "domain" {
 
 variable "package" {
   type    = string
-  default = "s-4vcpu-8gb-intel"
+  default = "s-8vcpu-16gb-intel"
 }
 
 variable "region" {

@@ -10,7 +10,7 @@ variable "domain" {
 
 variable "package" {
   type    = string
-  default = "s3.xlarge.2"
+  default = "s3.2xlarge.2"
 }
 
 variable "region" {

@@ -10,7 +10,7 @@ variable "domain" {
 
 variable "package" {
   type    = string
-  default = "cpx31"
+  default = "cpx41"
 }
 
 variable "location" {

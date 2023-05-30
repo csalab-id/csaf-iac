@@ -10,7 +10,7 @@ variable "region" {
 
 variable "package" {
   type    = string
-  default = "ecs.n4.xlarge"
+  default = "ecs.n4.2xlarge"
 }
 
 variable "domain" {
