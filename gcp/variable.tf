@@ -1,8 +1,3 @@
-variable "project" {
-  type    = string
-  default = ""
-}
-
 variable "name" {
   type    = string
   default = "csalab"

@@ -23,7 +23,10 @@ provider "google" {
   # credentials = <<-EOT
   # {"your": "credentialstring"}
   # EOT
-  project = var.project
+  #
+  # Set your project:
+  # export GOOGLE_PROJECT="google-project"
+  # project = "google-project"
   region  = var.region
   zone    = var.zone
 }
@@ -33,7 +36,6 @@ data "google_client_openid_userinfo" "csalab" {}
 resource "google_os_login_ssh_public_key" "csalab" {
   user    = data.google_client_openid_userinfo.csalab.email
   key     = file("../csalab_rsa.pub")
-  project = var.project
 }
 
 resource "google_compute_instance" "csalab" {
