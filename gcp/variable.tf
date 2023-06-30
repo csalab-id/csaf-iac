@@ -1,6 +1,6 @@
 variable "name" {
   type    = string
-  default = "csaf_cloud"
+  default = "csaf-cloud"
 }
 
 variable "package" {
