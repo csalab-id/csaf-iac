@@ -1,12 +1,12 @@
-# CSALab Terraform Cloud
-This repository contains Terraform code for managing the infrastructure of the CSALab project using Terraform CLI.
+# CSAF Terraform Cloud
+This repository contains Terraform code for managing the infrastructure of the CSAF project using Terraform CLI.
 
 ## How to use
 For example, to apply the Terraform code with AWS cloud services provider:
 
 ```
-git clone https://github.com/csalab-id/csalab-terraform-cloud
-cd csalab-terraform-cloud/aws
+git clone https://github.com/csalab-id/csaf-terraform-iaac
+cd csaf-terraform-iaac/aws
 export AWS_ACCESS_KEY_ID=A******************I
 export AWS_SECRET_ACCESS_KEY=a**************************************I
 export CLOUDFLARE_API_KEY=6***********************************i
@@ -19,7 +19,7 @@ terraform apply
 To destroy the project you can use this command:
 
 ```
-cd csalab-terraform-cloud/aws
+cd csaf-terraform-iaac/aws
 terraform destroy
 ```
 
@@ -37,11 +37,11 @@ To ensure the installation is finished, you should wait for the process until 1 
 and you can access the instance with ssh using this command:
 
 ```
-cd csalab-terraform-cloud
-ssh -i csalab_rsa ubuntu@aws.csalab.cloud
+cd csaf-terraform-iaac
+ssh -i csaf_rsa ubuntu@aws.csalab.cloud
 ```
 
-To access the CSA Lab Project you can open this URL on the browser with this URL:
+To access the CSAF Project you can open this URL on the browser with this URL:
 
 ```
 http://aws.csalab.cloud:6080/vnc.html (password: attack)
@@ -49,4 +49,4 @@ http://aws.csalab.cloud:7080/vnc.html (password: defense)
 http://aws.csalab.cloud:8080/vnc.html (password: monitor)
 ```
 
-For more information, you can see [this](https://github.com/csalab-id/csalab-docker) repository to get more info about the CSA Lab project.
+For more information, you can see [this](https://github.com/csalab-id/csaf-docker) repository to get more info about the CSAF project.

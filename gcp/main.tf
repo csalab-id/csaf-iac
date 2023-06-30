@@ -31,14 +31,14 @@ provider "google" {
   zone    = var.zone
 }
 
-data "google_client_openid_userinfo" "csalab" {}
+data "google_client_openid_userinfo" "csaf" {}
 
-resource "google_os_login_ssh_public_key" "csalab" {
-  user    = data.google_client_openid_userinfo.csalab.email
-  key     = file("../csalab_rsa.pub")
+resource "google_os_login_ssh_public_key" "csaf" {
+  user    = data.google_client_openid_userinfo.csaf.email
+  key     = file("../csaf_rsa.pub")
 }
 
-resource "google_compute_instance" "csalab" {
+resource "google_compute_instance" "csaf" {
   name                    = var.name
   machine_type            = var.package
   zone                    = var.zone
@@ -53,25 +53,25 @@ resource "google_compute_instance" "csalab" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${google_os_login_ssh_public_key.csalab.key}"
+    ssh-keys = "ubuntu:${google_os_login_ssh_public_key.csaf.key}"
   }
 
   network_interface {
-    network = google_compute_network.public-csalab.name
+    network = google_compute_network.public-csaf.name
     access_config {
-      nat_ip = google_compute_address.csalab.address
+      nat_ip = google_compute_address.csaf.address
     }
   }
 
   network_interface {
-    network    = google_compute_network.local-csalab.name
-    subnetwork = google_compute_subnetwork.csalab.name
+    network    = google_compute_network.local-csaf.name
+    subnetwork = google_compute_subnetwork.csaf.name
   }
 }
 
-resource "google_compute_firewall" "csalab" {
-  name    = "allow-csalab"
-  network = google_compute_network.public-csalab.name
+resource "google_compute_firewall" "csaf" {
+  name    = "allow-csaf"
+  network = google_compute_network.public-csaf.name
 
   allow {
     protocol = "tcp"
@@ -83,22 +83,22 @@ resource "google_compute_firewall" "csalab" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_network" "local-csalab" {
+resource "google_compute_network" "local-csaf" {
   name = "local-${var.name}"
 }
 
-resource "google_compute_network" "public-csalab" {
+resource "google_compute_network" "public-csaf" {
   name = "public-${var.name}"
 }
 
-resource "google_compute_subnetwork" "csalab" {
+resource "google_compute_subnetwork" "csaf" {
   name          = var.name
   ip_cidr_range = "10.0.37.0/24"
   region        = var.region
-  network       = google_compute_network.local-csalab.self_link
+  network       = google_compute_network.local-csaf.self_link
 }
 
-resource "google_compute_address" "csalab" {
+resource "google_compute_address" "csaf" {
   name   = var.name
   region = var.region
 }
@@ -111,14 +111,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "gcp"
-  value   = google_compute_address.csalab.address
+  value   = google_compute_address.csaf.address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

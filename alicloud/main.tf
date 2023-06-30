@@ -21,15 +21,15 @@ provider "alicloud" {
   region     = var.region
 }
 
-resource "alicloud_key_pair" "csalab" {
+resource "alicloud_key_pair" "csaf" {
   key_pair_name = var.name
-  public_key    = file("../csalab_rsa.pub")
+  public_key    = file("../csaf_rsa.pub")
 }
 
-resource "alicloud_security_group" "csalab" {
+resource "alicloud_security_group" "csaf" {
   name        = var.name
-  description = "CSA Lab security group"
-  vpc_id      = alicloud_vpc.csalab.id
+  description = "CSAF Security Group"
+  vpc_id      = alicloud_vpc.csaf.id
 }
 
 resource "alicloud_security_group_rule" "ssh" {
@@ -40,52 +40,52 @@ resource "alicloud_security_group_rule" "ssh" {
   policy            = "accept"
   port_range        = "22/22"
   priority          = 1
-  security_group_id = alicloud_security_group.csalab.id
+  security_group_id = alicloud_security_group.csaf.id
   cidr_ip           = "0.0.0.0/0"
 }
 
-resource "alicloud_security_group_rule" "csalab" {
-  description       = "CSA Lab Rule"
+resource "alicloud_security_group_rule" "csaf" {
+  description       = "CSAF Rule"
   type              = "ingress"
   ip_protocol       = "tcp"
   nic_type          = "intranet"
   policy            = "accept"
   port_range        = "6080/8080"
   priority          = 2
-  security_group_id = alicloud_security_group.csalab.id
+  security_group_id = alicloud_security_group.csaf.id
   cidr_ip           = "0.0.0.0/0"
 }
 
-data "alicloud_zones" "csalab" {
+data "alicloud_zones" "csaf" {
   available_disk_category     = "cloud_efficiency"
   available_resource_creation = "VSwitch"
 }
 
-resource "alicloud_vpc" "csalab" {
+resource "alicloud_vpc" "csaf" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "alicloud_vswitch" "csalab" {
-  vpc_id       = alicloud_vpc.csalab.id
+resource "alicloud_vswitch" "csaf" {
+  vpc_id       = alicloud_vpc.csaf.id
   cidr_block   = "10.0.37.0/24"
-  zone_id      = data.alicloud_zones.csalab.zones[0].id
+  zone_id      = data.alicloud_zones.csaf.zones[0].id
   vswitch_name = var.name
 }
 
-resource "alicloud_instance" "csalab" {
+resource "alicloud_instance" "csaf" {
   instance_name              = var.name
   host_name                  = var.name
-  description                = "CSA Lab instance"
-  availability_zone          = data.alicloud_zones.csalab.zones[0].id
-  security_groups            = [alicloud_security_group.csalab.id]
-  key_name                   = alicloud_key_pair.csalab.key_name
+  description                = "CSAF Instance"
+  availability_zone          = data.alicloud_zones.csaf.zones[0].id
+  security_groups            = [alicloud_security_group.csaf.id]
+  key_name                   = alicloud_key_pair.csaf.key_name
   instance_type              = var.package
   system_disk_category       = "cloud_efficiency"
   system_disk_name           = var.name
-  system_disk_description    = "CSA Lab disk"
+  system_disk_description    = "CSAF Disk"
   system_disk_size           = 100
   image_id                   = "ubuntu_22_04_x64_20G_alibase_20221130.vhd"
-  vswitch_id                 = alicloud_vswitch.csalab.id
+  vswitch_id                 = alicloud_vswitch.csaf.id
   internet_max_bandwidth_out = 100
   user_data                  = file("../startup.sh")
 }
@@ -98,14 +98,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "alicloud"
-  value   = alicloud_instance.csalab.public_ip
+  value   = alicloud_instance.csaf.public_ip
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

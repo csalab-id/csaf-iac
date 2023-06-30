@@ -21,17 +21,17 @@ provider "aws" {
   region = var.region
 }
 
-resource "aws_key_pair" "csalab" {
+resource "aws_key_pair" "csaf" {
   key_name   = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "aws_instance" "csalab" {
+resource "aws_instance" "csaf" {
   ami                    = "ami-02045ebddb047018b" # Ubuntu 22.04
   instance_type          = var.package
-  key_name               = aws_key_pair.csalab.key_name
-  vpc_security_group_ids = [aws_security_group.csalab.id]
-  subnet_id              = aws_subnet.csalab.id
+  key_name               = aws_key_pair.csaf.key_name
+  vpc_security_group_ids = [aws_security_group.csaf.id]
+  subnet_id              = aws_subnet.csaf.id
   user_data              = file("../startup.sh")
 
   tags = {
@@ -46,10 +46,10 @@ resource "aws_instance" "csalab" {
   }
 }
 
-resource "aws_security_group" "csalab" {
+resource "aws_security_group" "csaf" {
   name        = var.name
-  description = "Allow CSA Lab"
-  vpc_id      = aws_vpc.csalab.id
+  description = "CSAF Security Group"
+  vpc_id      = aws_vpc.csaf.id
 
   tags = {
     Name = var.name
@@ -77,15 +77,15 @@ resource "aws_security_group" "csalab" {
   }
 }
 
-resource "aws_vpc" "csalab" {
+resource "aws_vpc" "csaf" {
   cidr_block = "10.0.0.0/16"
   tags = {
     Name = var.name
   }
 }
 
-resource "aws_subnet" "csalab" {
-  vpc_id            = aws_vpc.csalab.id
+resource "aws_subnet" "csaf" {
+  vpc_id            = aws_vpc.csaf.id
   cidr_block        = "10.0.37.0/24"
   availability_zone = var.zone
   tags = {
@@ -93,43 +93,43 @@ resource "aws_subnet" "csalab" {
   }
 }
 
-resource "aws_route_table" "csalab" {
-  vpc_id =  aws_vpc.csalab.id
+resource "aws_route_table" "csaf" {
+  vpc_id =  aws_vpc.csaf.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.csalab.id
+    gateway_id = aws_internet_gateway.csaf.id
   }
   tags = {
     Name = var.name
   }
 }
 
-resource "aws_route_table_association" "csalab" {
-  subnet_id      = aws_subnet.csalab.id
-  route_table_id = aws_route_table.csalab.id
+resource "aws_route_table_association" "csaf" {
+  subnet_id      = aws_subnet.csaf.id
+  route_table_id = aws_route_table.csaf.id
 }
 
-resource "aws_internet_gateway" "csalab" {
+resource "aws_internet_gateway" "csaf" {
   tags = {
     Name = var.name
   }
 }
 
-resource "aws_internet_gateway_attachment" "csalab" {
-  vpc_id              = aws_vpc.csalab.id
-  internet_gateway_id = aws_internet_gateway.csalab.id
+resource "aws_internet_gateway_attachment" "csaf" {
+  vpc_id              = aws_vpc.csaf.id
+  internet_gateway_id = aws_internet_gateway.csaf.id
 }
 
-resource "aws_eip" "csalab" {
-  instance = aws_instance.csalab.id
+resource "aws_eip" "csaf" {
+  instance = aws_instance.csaf.id
   tags = {
     Name = var.name
   }
 }
 
-resource "aws_eip_association" "csalab" {
-  instance_id   = aws_instance.csalab.id
-  allocation_id = aws_eip.csalab.id
+resource "aws_eip_association" "csaf" {
+  instance_id   = aws_instance.csaf.id
+  allocation_id = aws_eip.csaf.id
 }
 
 provider "cloudflare" {
@@ -140,14 +140,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "aws"
-  value   = aws_eip.csalab.public_ip
+  value   = aws_eip.csaf.public_ip
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

@@ -1,7 +1,7 @@
 output "public_ip" {
-  value = azurerm_public_ip.csalab.ip_address
+  value = azurerm_public_ip.csaf.ip_address
 }
 
 output "subdomain" {
-  value = cloudflare_record.csalab.hostname
+  value = cloudflare_record.csaf.hostname
 }

@@ -1,6 +1,6 @@
 variable "name" {
   type    = string
-  default = "development"
+  default = "csaf_cloud"
 }
 
 variable "zone" {

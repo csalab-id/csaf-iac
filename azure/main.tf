@@ -31,22 +31,22 @@ provider "azurerm" {
   # client_secret   = "yourclientsecret"
 }
 
-resource "azurerm_resource_group" "csalab" {
+resource "azurerm_resource_group" "csaf" {
   name     = var.name
   location = var.location
 }
 
-resource "azurerm_virtual_machine" "csalab" {
+resource "azurerm_virtual_machine" "csaf" {
   name                  = var.name
-  resource_group_name   = azurerm_resource_group.csalab.name
-  location              = azurerm_resource_group.csalab.location
+  resource_group_name   = azurerm_resource_group.csaf.name
+  location              = azurerm_resource_group.csaf.location
   vm_size               = var.package
-  network_interface_ids = [azurerm_network_interface.csalab.id]
+  network_interface_ids = [azurerm_network_interface.csaf.id]
 
   os_profile {
     computer_name  = var.name
     admin_username = "ubuntu"
-    admin_password = "CSA_Admin"
+    admin_password = "CSAF_Admin@"
     custom_data    = file("../startup.sh")
   }
 
@@ -54,7 +54,7 @@ resource "azurerm_virtual_machine" "csalab" {
     disable_password_authentication = false
     ssh_keys {
       path     = "/home/ubuntu/.ssh/authorized_keys"
-      key_data = file("../csalab_rsa.pub")
+      key_data = file("../csaf_rsa.pub")
     }
   }
 
@@ -73,37 +73,37 @@ resource "azurerm_virtual_machine" "csalab" {
   }
 }
 
-resource "azurerm_network_interface" "csalab" {
+resource "azurerm_network_interface" "csaf" {
   name                = var.name
-  resource_group_name = azurerm_resource_group.csalab.name
-  location            = azurerm_resource_group.csalab.location
+  resource_group_name = azurerm_resource_group.csaf.name
+  location            = azurerm_resource_group.csaf.location
 
   ip_configuration {
     name                          = var.name
-    subnet_id                     = azurerm_subnet.csalab.id
+    subnet_id                     = azurerm_subnet.csaf.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.csalab.id
+    public_ip_address_id          = azurerm_public_ip.csaf.id
   }
 }
 
-resource "azurerm_virtual_network" "csalab" {
+resource "azurerm_virtual_network" "csaf" {
   name                = var.name
-  resource_group_name = azurerm_resource_group.csalab.name
-  location            = azurerm_resource_group.csalab.location
+  resource_group_name = azurerm_resource_group.csaf.name
+  location            = azurerm_resource_group.csaf.location
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "csalab" {
+resource "azurerm_subnet" "csaf" {
   name                 = var.name
-  resource_group_name  = azurerm_resource_group.csalab.name
-  virtual_network_name = azurerm_virtual_network.csalab.name
+  resource_group_name  = azurerm_resource_group.csaf.name
+  virtual_network_name = azurerm_virtual_network.csaf.name
   address_prefixes     = ["10.0.37.0/24"]
 }
 
-resource "azurerm_network_security_group" "csalab" {
+resource "azurerm_network_security_group" "csaf" {
   name                = var.name
-  location            = azurerm_resource_group.csalab.location
-  resource_group_name = azurerm_resource_group.csalab.name
+  location            = azurerm_resource_group.csaf.location
+  resource_group_name = azurerm_resource_group.csaf.name
 
   security_rule {
     name                       = "ssh"
@@ -119,8 +119,8 @@ resource "azurerm_network_security_group" "csalab" {
   }
 
   security_rule {
-    name                       = "csalab"
-    description                = "Allow csalab access"
+    name                       = "csaf"
+    description                = "Allow CSAF access"
     priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
@@ -132,15 +132,15 @@ resource "azurerm_network_security_group" "csalab" {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "csalab" {
-  network_interface_id      = azurerm_network_interface.csalab.id
-  network_security_group_id = azurerm_network_security_group.csalab.id
+resource "azurerm_network_interface_security_group_association" "csaf" {
+  network_interface_id      = azurerm_network_interface.csaf.id
+  network_security_group_id = azurerm_network_security_group.csaf.id
 }
 
-resource "azurerm_public_ip" "csalab" {
+resource "azurerm_public_ip" "csaf" {
   name                = var.name
-  resource_group_name = azurerm_resource_group.csalab.name
-  location            = azurerm_resource_group.csalab.location
+  resource_group_name = azurerm_resource_group.csaf.name
+  location            = azurerm_resource_group.csaf.location
   allocation_method   = "Dynamic"
 }
 
@@ -152,14 +152,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "azure"
-  value   = azurerm_public_ip.csalab.ip_address
+  value   = azurerm_public_ip.csaf.ip_address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

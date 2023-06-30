@@ -25,19 +25,19 @@ provider "openstack" {
   # user_domain_name = "Default"
 }
 
-resource "openstack_compute_keypair_v2" "csalab" {
+resource "openstack_compute_keypair_v2" "csaf" {
   name       = var.name
   region     = var.region
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "openstack_compute_instance_v2" "csalab" {
+resource "openstack_compute_instance_v2" "csaf" {
   name              = var.name
   flavor_name       = var.package
   region            = var.region
   availability_zone = "nova"
-  key_pair          = openstack_compute_keypair_v2.csalab.name
-  security_groups   = [openstack_compute_secgroup_v2.csalab.name,]
+  key_pair          = openstack_compute_keypair_v2.csaf.name
+  security_groups   = [openstack_compute_secgroup_v2.csaf.name,]
   user_data         = file("../startup.sh")
   
   block_device {
@@ -55,9 +55,9 @@ resource "openstack_compute_instance_v2" "csalab" {
   }
 }
 
-resource "openstack_compute_secgroup_v2" "csalab" {
+resource "openstack_compute_secgroup_v2" "csaf" {
   name        = var.name
-  description = "CSA Lab Rule"
+  description = "CSAF Rule"
   region      = var.region
 
   rule {
@@ -83,14 +83,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "ovh"
-  value   = openstack_compute_instance_v2.csalab.access_ip_v4
+  value   = openstack_compute_instance_v2.csaf.access_ip_v4
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

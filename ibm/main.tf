@@ -19,39 +19,39 @@ provider "ibm" {
   region           = var.region
 }
 
-resource "ibm_is_vpc" "csalab" {
+resource "ibm_is_vpc" "csaf" {
   name = var.name
 }
 
-resource "ibm_is_vpc_address_prefix" "csalab" {
+resource "ibm_is_vpc_address_prefix" "csaf" {
   cidr = "10.0.1.0/24"
   name = var.name
-  vpc  = ibm_is_vpc.csalab.id
+  vpc  = ibm_is_vpc.csaf.id
   zone = var.zone
 }
 
-resource "ibm_is_subnet" "csalab" {
+resource "ibm_is_subnet" "csaf" {
   depends_on = [
-    ibm_is_vpc_address_prefix.csalab
+    ibm_is_vpc_address_prefix.csaf
   ]
   name            = var.name
-  vpc             = ibm_is_vpc.csalab.id
+  vpc             = ibm_is_vpc.csaf.id
   zone            = var.zone
   ipv4_cidr_block = "10.0.1.0/24"
 }
 
-resource "ibm_is_security_group" "csalab" {
+resource "ibm_is_security_group" "csaf" {
   name = var.name
-  vpc  = ibm_is_vpc.csalab.id
+  vpc  = ibm_is_vpc.csaf.id
 }
 
-resource "ibm_is_security_group_target" "csalab" {
-  security_group = ibm_is_security_group.csalab.id
-  target         = ibm_is_floating_ip.csalab.target
+resource "ibm_is_security_group_target" "csaf" {
+  security_group = ibm_is_security_group.csaf.id
+  target         = ibm_is_floating_ip.csaf.target
 }
 
-resource "ibm_is_security_group_rule" "csalab" {
-  group     = ibm_is_security_group.csalab.id
+resource "ibm_is_security_group_rule" "csaf" {
+  group     = ibm_is_security_group.csaf.id
   direction = "inbound"
   remote    = "0.0.0.0/0"
   tcp {
@@ -60,23 +60,23 @@ resource "ibm_is_security_group_rule" "csalab" {
   }
 }
 
-resource "ibm_is_ssh_key" "csalab" {
+resource "ibm_is_ssh_key" "csaf" {
   name       = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "ibm_is_instance" "csalab" {
+resource "ibm_is_instance" "csaf" {
   name      = var.name
   image     = "r006-4861e0a4-8d36-4462-b497-767351f1d371" # Ubuntu 22.04
   profile   = var.package
-  vpc       = ibm_is_vpc.csalab.id
+  vpc       = ibm_is_vpc.csaf.id
   zone      = var.zone
-  keys      = [ibm_is_ssh_key.csalab.id]
+  keys      = [ibm_is_ssh_key.csaf.id]
   user_data = file("../startup.sh")
 
   primary_network_interface {
     # name   = var.name
-    subnet = ibm_is_subnet.csalab.id
+    subnet = ibm_is_subnet.csaf.id
   }
 
   boot_volume {
@@ -85,9 +85,9 @@ resource "ibm_is_instance" "csalab" {
   }
 }
 
-resource "ibm_is_floating_ip" "csalab" {
+resource "ibm_is_floating_ip" "csaf" {
   name   = var.name
-  target = ibm_is_instance.csalab.primary_network_interface[0].id
+  target = ibm_is_instance.csaf.primary_network_interface[0].id
 }
 
 provider "cloudflare" {
@@ -98,14 +98,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "ibm"
-  value   = ibm_is_floating_ip.csalab.address
+  value   = ibm_is_floating_ip.csaf.address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

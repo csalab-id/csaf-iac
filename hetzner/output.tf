@@ -1,7 +1,7 @@
 output "public_ip" {
-  value = hcloud_server.csalab.ipv4_address
+  value = hcloud_server.csaf.ipv4_address
 }
 
 output "subdomain" {
-  value = cloudflare_record.csalab.hostname
+  value = cloudflare_record.csaf.hostname
 }

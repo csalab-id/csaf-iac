@@ -19,29 +19,29 @@ provider "civo" {
   region = var.region
 }
 
-resource "civo_ssh_key" "csalab"{
+resource "civo_ssh_key" "csaf"{
   name       = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "civo_instance" "csalab" {
+resource "civo_instance" "csaf" {
   hostname     = var.name
   size         = var.package
-  sshkey_id    = civo_ssh_key.csalab.id
+  sshkey_id    = civo_ssh_key.csaf.id
   initial_user = "ubuntu"
   script       = file("../startup.sh")
-  network_id   = civo_network.csalab.id
-  firewall_id  = civo_firewall.csalab.id
+  network_id   = civo_network.csaf.id
+  firewall_id  = civo_firewall.csaf.id
   disk_image   = "9f953761-8b20-4623-8dff-e0c845201966" # Ubuntu 22.04
 }
 
-resource "civo_network" "csalab" {
+resource "civo_network" "csaf" {
   label = var.name
 }
 
-resource "civo_firewall" "csalab" {
+resource "civo_firewall" "csaf" {
   name                 = var.name
-  network_id           = civo_network.csalab.id
+  network_id           = civo_network.csaf.id
   create_default_rules = false
   ingress_rule {
     label      = "ssh"
@@ -76,14 +76,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "civo"
-  value   = civo_instance.csalab.public_ip
+  value   = civo_instance.csaf.public_ip
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

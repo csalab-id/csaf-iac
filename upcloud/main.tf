@@ -20,7 +20,7 @@ provider "upcloud" {
   # password = "yourpassword"
 }
 
-resource "upcloud_server" "csalab" {
+resource "upcloud_server" "csaf" {
   hostname  = var.name
   title     = var.name
   zone      = var.zone
@@ -42,19 +42,19 @@ resource "upcloud_server" "csalab" {
   network_interface {
     ip_address_family = "IPv4"
     type              = "private"
-    network           = upcloud_network.csalab.id
+    network           = upcloud_network.csaf.id
   }
 
   login {
     user = "ubuntu"
     keys = [
-      file("../csalab_rsa.pub"),
+      file("../csaf_rsa.pub"),
     ]
   }
 }
 
-resource "upcloud_firewall_rules" "csalab" {
-  server_id = upcloud_server.csalab.id
+resource "upcloud_firewall_rules" "csaf" {
+  server_id = upcloud_server.csaf.id
 
   firewall_rule {
     action                    = "accept"
@@ -84,10 +84,10 @@ resource "upcloud_firewall_rules" "csalab" {
   }
 }
 
-resource "upcloud_network" "csalab" {
+resource "upcloud_network" "csaf" {
   name   = var.name
   zone   = var.zone
-  router = upcloud_router.csalab.id
+  router = upcloud_router.csaf.id
 
   ip_network {
     address            = "10.0.37.0/24"
@@ -98,7 +98,7 @@ resource "upcloud_network" "csalab" {
   }
 }
 
-resource "upcloud_router" "csalab" {
+resource "upcloud_router" "csaf" {
   name = var.name
 }
 
@@ -110,14 +110,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "upcloud"
-  value   = upcloud_server.csalab.network_interface[0].ip_address
+  value   = upcloud_server.csaf.network_interface[0].ip_address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

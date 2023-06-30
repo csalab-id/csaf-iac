@@ -1,7 +1,7 @@
 output "public_ip" {
-  value = linode_instance.csalab.ip_address
+  value = linode_instance.csaf.ip_address
 }
 
 output "subdomain" {
-  value = cloudflare_record.csalab.hostname
+  value = cloudflare_record.csaf.hostname
 }

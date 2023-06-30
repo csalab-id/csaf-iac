@@ -18,26 +18,26 @@ provider "digitalocean" {
   # token = "yourtoken"
 }
 
-resource "digitalocean_ssh_key" "csalab" {
+resource "digitalocean_ssh_key" "csaf" {
   name       = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "digitalocean_droplet" "csalab" {
+resource "digitalocean_droplet" "csaf" {
   name      = var.name
   image     = "ubuntu-22-04-x64"
   size      = var.package
   region    = var.region
-  ssh_keys  = [digitalocean_ssh_key.csalab.fingerprint]
-  vpc_uuid  = digitalocean_vpc.csalab.id
+  ssh_keys  = [digitalocean_ssh_key.csaf.fingerprint]
+  vpc_uuid  = digitalocean_vpc.csaf.id
   user_data = file("../startup.sh")
 }
 
-resource "digitalocean_firewall" "csalab" {
+resource "digitalocean_firewall" "csaf" {
   name = var.name
 
   droplet_ids = [
-    digitalocean_droplet.csalab.id,
+    digitalocean_droplet.csaf.id,
   ]
 
   inbound_rule {
@@ -80,7 +80,7 @@ resource "digitalocean_firewall" "csalab" {
   }
 }
 
-resource "digitalocean_vpc" "csalab" {
+resource "digitalocean_vpc" "csaf" {
   name     = var.name
   region   = var.region
   ip_range = "10.0.37.0/24"
@@ -94,14 +94,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "digitalocean"
-  value   = digitalocean_droplet.csalab.ipv4_address
+  value   = digitalocean_droplet.csaf.ipv4_address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

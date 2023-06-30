@@ -21,17 +21,17 @@ provider "huaweicloud" {
   region     = var.region
 }
 
-resource "huaweicloud_compute_keypair" "csalab" {
+resource "huaweicloud_compute_keypair" "csaf" {
   name       = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "huaweicloud_compute_instance" "csalab" {
+resource "huaweicloud_compute_instance" "csaf" {
   name               = var.name
   image_name         = "Ubuntu 22.04 server 64bit"
   flavor_id          = var.package
-  key_pair           = huaweicloud_compute_keypair.csalab.name
-  security_groups    = [huaweicloud_networking_secgroup.csalab.name]
+  key_pair           = huaweicloud_compute_keypair.csaf.name
+  security_groups    = [huaweicloud_networking_secgroup.csaf.name]
   region             = var.region
   availability_zone  = var.zone
   system_disk_size   = 100
@@ -39,17 +39,17 @@ resource "huaweicloud_compute_instance" "csalab" {
   user_data          = file("../startup.sh")
 
   network {
-    uuid = huaweicloud_vpc_subnet.csalab.id
+    uuid = huaweicloud_vpc_subnet.csaf.id
   }
 }
 
-resource "huaweicloud_networking_secgroup" "csalab" {
+resource "huaweicloud_networking_secgroup" "csaf" {
   name        = var.name
-  description = "CSA Lab Security Group"
+  description = "CSAF Security Group"
 }
 
 resource "huaweicloud_networking_secgroup_rule" "ssh" {
-  security_group_id = huaweicloud_networking_secgroup.csalab.id
+  security_group_id = huaweicloud_networking_secgroup.csaf.id
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -58,8 +58,8 @@ resource "huaweicloud_networking_secgroup_rule" "ssh" {
   remote_ip_prefix  = "0.0.0.0/0"
 }
 
-resource "huaweicloud_networking_secgroup_rule" "csalab" {
-  security_group_id = huaweicloud_networking_secgroup.csalab.id
+resource "huaweicloud_networking_secgroup_rule" "csaf" {
+  security_group_id = huaweicloud_networking_secgroup.csaf.id
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -68,7 +68,7 @@ resource "huaweicloud_networking_secgroup_rule" "csalab" {
   remote_ip_prefix  = "0.0.0.0/0"
 }
 
-resource "huaweicloud_vpc_eip" "csalab" {
+resource "huaweicloud_vpc_eip" "csaf" {
   publicip {
     type = "5_bgp"
   }
@@ -80,21 +80,21 @@ resource "huaweicloud_vpc_eip" "csalab" {
   }
 }
 
-resource "huaweicloud_compute_eip_associate" "csalab" {
-  public_ip   = huaweicloud_vpc_eip.csalab.address
-  instance_id = huaweicloud_compute_instance.csalab.id
+resource "huaweicloud_compute_eip_associate" "csaf" {
+  public_ip   = huaweicloud_vpc_eip.csaf.address
+  instance_id = huaweicloud_compute_instance.csaf.id
 }
 
-resource "huaweicloud_vpc" "csalab" {
+resource "huaweicloud_vpc" "csaf" {
   name = var.name
   cidr = "10.0.0.0/16"
 }
 
-resource "huaweicloud_vpc_subnet" "csalab" {
+resource "huaweicloud_vpc_subnet" "csaf" {
   name       = var.name
   cidr       = "10.0.37.0/24"
   gateway_ip = "10.0.37.1"
-  vpc_id     = huaweicloud_vpc.csalab.id
+  vpc_id     = huaweicloud_vpc.csaf.id
 }
 
 provider "cloudflare" {
@@ -105,14 +105,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "huawei"
-  value   = huaweicloud_vpc_eip.csalab.address
+  value   = huaweicloud_vpc_eip.csaf.address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

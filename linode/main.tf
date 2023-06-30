@@ -18,58 +18,58 @@ provider  "linode" {
   # token = "yourtoken"
 }
 
-data "linode_profile" "csalab" {}
+data "linode_profile" "csaf" {}
 
-resource "linode_sshkey" "csalab" {
+resource "linode_sshkey" "csaf" {
   label   = var.name
-  ssh_key = chomp(file("../csalab_rsa.pub"))
+  ssh_key = chomp(file("../csaf_rsa.pub"))
 }
 
-resource "linode_stackscript" "csalab" {
+resource "linode_stackscript" "csaf" {
   label       = var.name
-  description = "Deploy CSA Lab"
+  description = "Deploy CSAF"
   script      = file("../startup.sh")
   images      = ["linode/ubuntu22.04"]
   rev_note    = "v1.0"
 }
 
-resource "linode_instance"  "csalab" {
+resource "linode_instance"  "csaf" {
   label          = var.name
   group          = var.name
   region         = var.region
   type           = var.package
 }
 
-resource "linode_instance_disk" "csalab" {
+resource "linode_instance_disk" "csaf" {
   label            = "boot"
-  linode_id        = linode_instance.csalab.id
+  linode_id        = linode_instance.csaf.id
   size             = 100000 # 100 GB
   image            = "linode/ubuntu22.04"
-  authorized_keys  = [linode_sshkey.csalab.ssh_key]
-  authorized_users = [data.linode_profile.csalab.username]
-  root_pass        = "CSA_Admin"
-  stackscript_id   = linode_stackscript.csalab.id
+  authorized_keys  = [linode_sshkey.csaf.ssh_key]
+  authorized_users = [data.linode_profile.csaf.username]
+  root_pass        = "CSAF_Admin@"
+  stackscript_id   = linode_stackscript.csaf.id
 }
 
 resource "linode_instance_config" "boot_config" {
   label       = "boot_config"
-  linode_id   = linode_instance.csalab.id
+  linode_id   = linode_instance.csaf.id
   root_device = "/dev/sda"
   kernel      = "linode/latest-64bit"
   booted      = true
 
   devices {
     sda {
-      disk_id = linode_instance_disk.csalab.id
+      disk_id = linode_instance_disk.csaf.id
     }
   }
 }
 
-resource "linode_firewall" "csalab" {
+resource "linode_firewall" "csaf" {
   label           = var.name
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
-  linodes         = [linode_instance.csalab.id]
+  linodes         = [linode_instance.csaf.id]
 
   inbound {
     label    = "ssh"
@@ -80,7 +80,7 @@ resource "linode_firewall" "csalab" {
   }
 
   inbound {
-    label    = "csalab"
+    label    = "csaf"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "6080-8080"
@@ -96,14 +96,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "linode"
-  value   = linode_instance.csalab.ip_address
+  value   = linode_instance.csaf.ip_address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

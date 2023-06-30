@@ -18,12 +18,12 @@ provider "vultr" {
   # api_key = "yourapikey"
 }
 
-resource "vultr_ssh_key" "csalab" {
+resource "vultr_ssh_key" "csaf" {
   name    = var.name
-  ssh_key = file("../csalab_rsa.pub")
+  ssh_key = file("../csaf_rsa.pub")
 }
 
-resource "vultr_instance" "csalab" {
+resource "vultr_instance" "csaf" {
   plan              = var.plan
   os_id             = 1743 # Ubuntu 22.04
   region            = var.region
@@ -34,18 +34,18 @@ resource "vultr_instance" "csalab" {
   activation_email  = false
   ddos_protection   = false
   tags              = [var.name]
-  firewall_group_id = vultr_firewall_group.csalab.id
+  firewall_group_id = vultr_firewall_group.csaf.id
   user_data         = file("../startup.sh")
-  ssh_key_ids       = [vultr_ssh_key.csalab.id]
-  vpc_ids           = [vultr_vpc.csalab.id]
+  ssh_key_ids       = [vultr_ssh_key.csaf.id]
+  vpc_ids           = [vultr_vpc.csaf.id]
 }
 
-resource "vultr_firewall_group" "csalab" {
+resource "vultr_firewall_group" "csaf" {
   description = var.name
 }
 
 resource "vultr_firewall_rule" "ssh" {
-  firewall_group_id = vultr_firewall_group.csalab.id
+  firewall_group_id = vultr_firewall_group.csaf.id
   protocol          = "tcp"
   subnet            = "0.0.0.0"
   subnet_size       = 0
@@ -54,7 +54,7 @@ resource "vultr_firewall_rule" "ssh" {
 }
 
 resource "vultr_firewall_rule" "attack" {
-  firewall_group_id = vultr_firewall_group.csalab.id
+  firewall_group_id = vultr_firewall_group.csaf.id
   protocol          = "tcp"
   subnet            = "0.0.0.0"
   subnet_size       = 0
@@ -62,7 +62,7 @@ resource "vultr_firewall_rule" "attack" {
   ip_type           = "v4"
 }
 
-resource "vultr_vpc" "csalab" {
+resource "vultr_vpc" "csaf" {
   description    = var.name
   region         = var.region
   v4_subnet      = "10.0.37.0"
@@ -77,14 +77,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "vultr"
-  value   = vultr_instance.csalab.main_ip
+  value   = vultr_instance.csaf.main_ip
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

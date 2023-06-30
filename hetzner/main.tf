@@ -18,25 +18,25 @@ provider "hcloud" {
   # token = "yourtoken"
 }
 
-resource "hcloud_ssh_key" "csalab" {
+resource "hcloud_ssh_key" "csaf" {
   name       = var.name
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "hcloud_server" "csalab" {
+resource "hcloud_server" "csaf" {
   name         = var.name
   image        = "ubuntu-22.04"
   server_type  = var.package
   location     = var.location
   user_data    = file("../startup.sh")
-  ssh_keys     = [hcloud_ssh_key.csalab.name]
+  ssh_keys     = [hcloud_ssh_key.csaf.name]
 
   network {
-    network_id = hcloud_network.csalab.id
+    network_id = hcloud_network.csaf.id
   }
 
   depends_on = [
-    hcloud_network_subnet.csalab
+    hcloud_network_subnet.csaf
   ]
 
   public_net {
@@ -45,19 +45,19 @@ resource "hcloud_server" "csalab" {
   }
 }
 
-resource "hcloud_network" "csalab" {
+resource "hcloud_network" "csaf" {
   name     = var.name
   ip_range = "10.0.0.0/16"
 }
 
-resource "hcloud_network_subnet" "csalab" {
+resource "hcloud_network_subnet" "csaf" {
   type         = "cloud"
-  network_id   = hcloud_network.csalab.id
+  network_id   = hcloud_network.csaf.id
   network_zone = var.zone
   ip_range     = "10.0.37.0/24"
 }
 
-resource "hcloud_firewall" "csalab" {
+resource "hcloud_firewall" "csaf" {
   name = var.name
   rule {
     description = "Allow SSH"
@@ -70,7 +70,7 @@ resource "hcloud_firewall" "csalab" {
   }
 
   rule {
-    description = "Allow CSA Lab"
+    description = "Allow CSAF"
     direction   = "in"
     protocol    = "tcp"
     port        = "6080-8080"
@@ -80,9 +80,9 @@ resource "hcloud_firewall" "csalab" {
   }
 }
 
-resource "hcloud_firewall_attachment" "csalab" {
-  firewall_id = hcloud_firewall.csalab.id
-  server_ids  = [hcloud_server.csalab.id]
+resource "hcloud_firewall_attachment" "csaf" {
+  firewall_id = hcloud_firewall.csaf.id
+  server_ids  = [hcloud_server.csaf.id]
 }
 
 provider "cloudflare" {
@@ -93,14 +93,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "hetzner"
-  value   = hcloud_server.csalab.ipv4_address
+  value   = hcloud_server.csaf.ipv4_address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

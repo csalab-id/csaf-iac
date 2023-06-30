@@ -1,7 +1,7 @@
 output "public_ip" {
-  value = openstack_networking_floatingip_v2.csalab.address
+  value = openstack_networking_floatingip_v2.csaf.address
 }
 
 output "subdomain" {
-  value = cloudflare_record.csalab.hostname
+  value = cloudflare_record.csaf.hostname
 }

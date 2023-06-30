@@ -27,70 +27,70 @@ provider "openstack" {
   # tenant_id        = "yourprojectid"
 }
 
-resource "openstack_compute_keypair_v2" "csalab" {
+resource "openstack_compute_keypair_v2" "csaf" {
   name       = var.name
   region     = var.region
-  public_key = file("../csalab_rsa.pub")
+  public_key = file("../csaf_rsa.pub")
 }
 
-resource "openstack_compute_instance_v2" "csalab" {
+resource "openstack_compute_instance_v2" "csaf" {
   name              = var.name
   image_name        = "Ubuntu 22.04 LTS"
   flavor_name       = var.package
   region            = var.region
   availability_zone = "az-01"
-  key_pair          = openstack_compute_keypair_v2.csalab.name
-  security_groups   = ["default", openstack_compute_secgroup_v2.csalab.name]
+  key_pair          = openstack_compute_keypair_v2.csaf.name
+  security_groups   = ["default", openstack_compute_secgroup_v2.csaf.name]
   user_data         = file("../startup.sh")
   network {
     access_network = true
-    name           = openstack_networking_network_v2.csalab.name
+    name           = openstack_networking_network_v2.csaf.name
   }
 }
 
-resource "openstack_networking_network_v2" "csalab" {
+resource "openstack_networking_network_v2" "csaf" {
   name           = var.name
   admin_state_up = "true"
 }
 
-resource "openstack_networking_port_v2" "csalab" {
+resource "openstack_networking_port_v2" "csaf" {
   name           = var.name
-  network_id     = openstack_networking_network_v2.csalab.id
+  network_id     = openstack_networking_network_v2.csaf.id
   admin_state_up = "true"
   fixed_ip {
-    subnet_id = openstack_networking_subnet_v2.csalab.id
+    subnet_id = openstack_networking_subnet_v2.csaf.id
   }
 }
 
-resource "openstack_networking_subnet_v2" "csalab" {
+resource "openstack_networking_subnet_v2" "csaf" {
   name            = var.name
-  network_id      = openstack_networking_network_v2.csalab.id
+  network_id      = openstack_networking_network_v2.csaf.id
   cidr            = "10.0.37.0/24"
   ip_version      = 4
 }
 
-resource "openstack_networking_router_v2" "csalab" {
+resource "openstack_networking_router_v2" "csaf" {
   name                = var.name
   external_network_id = "70229857-9658-416a-96cf-27f19cfa8606"
 }
 
-resource "openstack_networking_router_interface_v2" "csalab" {
-  router_id = openstack_networking_router_v2.csalab.id
-  subnet_id = openstack_networking_subnet_v2.csalab.id
+resource "openstack_networking_router_interface_v2" "csaf" {
+  router_id = openstack_networking_router_v2.csaf.id
+  subnet_id = openstack_networking_subnet_v2.csaf.id
 }
 
-resource "openstack_networking_floatingip_v2" "csalab" {
+resource "openstack_networking_floatingip_v2" "csaf" {
   pool = "Public_Network"
 }
 
-resource "openstack_compute_floatingip_associate_v2" "csalab" {
-  floating_ip = openstack_networking_floatingip_v2.csalab.address
-  instance_id = openstack_compute_instance_v2.csalab.id
+resource "openstack_compute_floatingip_associate_v2" "csaf" {
+  floating_ip = openstack_networking_floatingip_v2.csaf.address
+  instance_id = openstack_compute_instance_v2.csaf.id
 }
 
-resource "openstack_compute_secgroup_v2" "csalab" {
+resource "openstack_compute_secgroup_v2" "csaf" {
   name        = var.name
-  description = "CSA Lab Rule"
+  description = "CSAF Rule"
 
   rule {
     ip_protocol = "tcp"
@@ -115,14 +115,14 @@ provider "cloudflare" {
   # api_key = "yourkey"
 }
 
-data "cloudflare_zone" "csalab" {
+data "cloudflare_zone" "csaf" {
   name = var.domain
 }
 
-resource "cloudflare_record" "csalab" {
+resource "cloudflare_record" "csaf" {
   name    = "biznet"
-  value   = openstack_networking_floatingip_v2.csalab.address
+  value   = openstack_networking_floatingip_v2.csaf.address
   type    = "A"
   proxied = false
-  zone_id = data.cloudflare_zone.csalab.id
+  zone_id = data.cloudflare_zone.csaf.id
 }

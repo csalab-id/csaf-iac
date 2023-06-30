@@ -1,7 +1,7 @@
 output "public_ip" {
-  value = digitalocean_droplet.csalab.ipv4_address
+  value = digitalocean_droplet.csaf.ipv4_address
 }
 
 output "subdomain" {
-  value = cloudflare_record.csalab.hostname
+  value = cloudflare_record.csaf.hostname
 }
