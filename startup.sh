@@ -15,6 +15,5 @@ cd /root/
 git clone https://github.com/csalab-id/csaf-docker
 cd csaf-docker
 docker-compose pull
-docker-compose build
 docker-compose -f generate-indexer-certs.yml run --rm generator
 docker-compose up -d
