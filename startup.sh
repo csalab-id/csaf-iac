@@ -12,8 +12,8 @@ yes | DEBIAN_FRONTEND=noninteractive apt -yq upgrade
 apt -y autoremove
 apt clean all
 cd /root/
-git clone https://github.com/csalab-id/csaf-docker
-cd csaf-docker
+git clone https://github.com/csalab-id/csaf
+cd csaf
 docker-compose pull
 docker-compose -f generate-indexer-certs.yml run --rm generator
 docker-compose up -d
