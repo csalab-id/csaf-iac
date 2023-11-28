@@ -12,8 +12,3 @@ variable "package" {
   type    = string
   default = "ecs.n4.2xlarge"
 }
-
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}

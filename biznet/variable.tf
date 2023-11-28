@@ -8,11 +8,6 @@ variable "package" {
   default = "SL12.8"
 }
 
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}
-
 variable "region" {
   type    = string
   default = "jakarta-2"

@@ -4,10 +4,6 @@ terraform {
       source  = "IBM-Cloud/ibm"
       version = "~> 1.51"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -88,24 +84,4 @@ resource "ibm_is_instance" "csaf" {
 resource "ibm_is_floating_ip" "csaf" {
   name   = var.name
   target = ibm_is_instance.csaf.primary_network_interface[0].id
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "ibm"
-  value   = ibm_is_floating_ip.csaf.address
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

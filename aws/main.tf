@@ -4,10 +4,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.48"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -130,24 +126,4 @@ resource "aws_eip" "csaf" {
 resource "aws_eip_association" "csaf" {
   instance_id   = aws_instance.csaf.id
   allocation_id = aws_eip.csaf.id
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "aws"
-  value   = aws_eip.csaf.public_ip
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

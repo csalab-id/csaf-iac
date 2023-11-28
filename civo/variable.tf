@@ -3,11 +3,6 @@ variable "name" {
   default = "csafserver"
 }
 
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}
-
 variable "region" {
   type    = string
   default = "NYC1"

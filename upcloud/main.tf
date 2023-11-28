@@ -4,10 +4,6 @@ terraform {
       source  = "UpCloudLtd/upcloud"
       version = "~> 2.8"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -100,24 +96,4 @@ resource "upcloud_network" "csaf" {
 
 resource "upcloud_router" "csaf" {
   name = var.name
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "upcloud"
-  value   = upcloud_server.csaf.network_interface[0].ip_address
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

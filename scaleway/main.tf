@@ -4,10 +4,6 @@ terraform {
       source  = "scaleway/scaleway"
       version = "~> 2.12"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -60,7 +56,7 @@ resource "scaleway_instance_security_group" "csaf" {
 resource "scaleway_vpc_private_network" "csaf" {
   name       = var.name
   tags       = [ var.name ]
-  zone       = var.zone
+  region     = var.region
   project_id = var.project_id
 }
 
@@ -107,24 +103,4 @@ resource "scaleway_instance_server" "csaf" {
     volume_type = "b_ssd"
     size_in_gb  = 100
   }
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "scaleway"
-  value   = scaleway_instance_ip.csaf.address
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

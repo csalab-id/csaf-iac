@@ -12,8 +12,3 @@ variable "region" {
   type    = string
   default = "sgp"
 }
-
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}

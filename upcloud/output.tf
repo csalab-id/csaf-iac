@@ -1,7 +1,15 @@
-output "public_ip" {
-  value = upcloud_server.csaf.network_interface[0].ip_address
+output "attack_lab_web" {
+  value = "http://${upcloud_server.csaf.network_interface[0].ip_address}:6080/vnc.html"
 }
 
-output "subdomain" {
-  value = cloudflare_record.csaf.hostname
+output "defense_lab_web" {
+  value = "http://${upcloud_server.csaf.network_interface[0].ip_address}:7080/vnc.html"
+}
+
+output "monitor_lab_web" {
+  value = "http://${upcloud_server.csaf.network_interface[0].ip_address}:8080/vnc.html"
+}
+
+output "csaf_ssh_access" {
+  value = "ssh -i csaf_rsa ubuntu@${upcloud_server.csaf.network_interface[0].ip_address}"
 }

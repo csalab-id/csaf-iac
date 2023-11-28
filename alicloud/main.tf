@@ -4,10 +4,6 @@ terraform {
       source  = "aliyun/alicloud"
       version = "~> 1.195"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -78,7 +74,7 @@ resource "alicloud_instance" "csaf" {
   description                = "CSAF Instance"
   availability_zone          = data.alicloud_zones.csaf.zones[0].id
   security_groups            = [alicloud_security_group.csaf.id]
-  key_name                   = alicloud_key_pair.csaf.key_name
+  key_name                   = alicloud_key_pair.csaf.key_pair_name
   instance_type              = var.package
   system_disk_category       = "cloud_efficiency"
   system_disk_name           = var.name
@@ -88,24 +84,4 @@ resource "alicloud_instance" "csaf" {
   vswitch_id                 = alicloud_vswitch.csaf.id
   internet_max_bandwidth_out = 100
   user_data                  = file("../startup.sh")
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "alicloud"
-  value   = alicloud_instance.csaf.public_ip
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

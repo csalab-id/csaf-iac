@@ -4,10 +4,6 @@ terraform {
       source  = "vultr/vultr"
       version = "~> 2.12"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -67,24 +63,4 @@ resource "vultr_vpc" "csaf" {
   region         = var.region
   v4_subnet      = "10.0.37.0"
   v4_subnet_mask = 24
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "vultr"
-  value   = vultr_instance.csaf.main_ip
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

@@ -1,7 +1,15 @@
-output "public_ip" {
-  value = civo_instance.csaf.public_ip
+output "attack_lab_web" {
+  value = "http://${civo_instance.csaf.public_ip}:6080/vnc.html"
 }
 
-output "subdomain" {
-  value = cloudflare_record.csaf.hostname
+output "defense_lab_web" {
+  value = "http://${civo_instance.csaf.public_ip}:7080/vnc.html"
+}
+
+output "monitor_lab_web" {
+  value = "http://${civo_instance.csaf.public_ip}:8080/vnc.html"
+}
+
+output "csaf_ssh_access" {
+  value = "ssh -i csaf_rsa ubuntu@${civo_instance.csaf.public_ip}"
 }

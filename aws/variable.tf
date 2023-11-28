@@ -17,8 +17,3 @@ variable "zone" {
   type    = string
   default = "ap-southeast-1a"
 }
-
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}

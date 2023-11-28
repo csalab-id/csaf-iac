@@ -12,8 +12,3 @@ variable "plan" {
   type    = string
   default = "6xCPU-16GB"
 }
-
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}

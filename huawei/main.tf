@@ -4,10 +4,6 @@ terraform {
       source  = "huaweicloud/huaweicloud"
       version = "~> 1.44"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -95,24 +91,4 @@ resource "huaweicloud_vpc_subnet" "csaf" {
   cidr       = "10.0.37.0/24"
   gateway_ip = "10.0.37.1"
   vpc_id     = huaweicloud_vpc.csaf.id
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "huawei"
-  value   = huaweicloud_vpc_eip.csaf.address
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
 }

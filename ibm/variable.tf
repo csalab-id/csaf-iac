@@ -17,8 +17,3 @@ variable "package" {
   type    = string
   default = "cx2-8x16"
 }
-
-variable "domain" {
-  type    = string
-  default = "csalab.cloud"
-}

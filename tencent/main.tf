@@ -4,10 +4,6 @@ terraform {
       source  = "tencentcloudstack/tencentcloud"
       version = "~> 1.79"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.32"
-    }
   }
   required_version = ">= 1.3.0"
 }
@@ -66,39 +62,14 @@ resource "tencentcloud_security_group" "csaf" {
   description = "CSA Lab Rules"
 }
 
-resource "tencentcloud_security_group_rule" "incoming" {
+resource "tencentcloud_security_group_lite_rule" "incoming" {
   security_group_id = tencentcloud_security_group.csaf.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "TCP"
-  port_range        = "22,6080,7080,8080"
-  policy            = "accept"
-}
+  ingress = [
+    "ACCEPT#0.0.0.0/0#22,6080,7080,8080#TCP",
+    "DROP#0.0.0.0/0#ALL#ALL"
+  ]
 
-resource "tencentcloud_security_group_rule" "outgoing" {
-  security_group_id = tencentcloud_security_group.csaf.id
-  type              = "egress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "TCP"
-  policy            = "accept"
-}
-
-provider "cloudflare" {
-  # Generate token (Global API Key) from: https://dash.cloudflare.com/profile/api-tokens
-  # export CLOUDFLARE_EMAIL="yourmail"
-  # export CLOUDFLARE_API_KEY="yourkey"
-  # email   = "yourmail"
-  # api_key = "yourkey"
-}
-
-data "cloudflare_zone" "csaf" {
-  name = var.domain
-}
-
-resource "cloudflare_record" "csaf" {
-  name    = "tencent"
-  value   = tencentcloud_instance.csaf.public_ip
-  type    = "A"
-  proxied = false
-  zone_id = data.cloudflare_zone.csaf.id
+  egress = [
+    "ACCEPT#0.0.0.0/0#ALL#ALL"
+  ]
 }
