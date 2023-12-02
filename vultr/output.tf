@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${vultr_instance.csaf.main_ip}"
+  value = "ssh -i csaf_rsa root@${vultr_instance.csaf.main_ip}"
 }

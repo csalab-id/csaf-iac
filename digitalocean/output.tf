@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${digitalocean_droplet.csaf.ipv4_address}"
+  value = "ssh -i csaf_rsa root@${digitalocean_droplet.csaf.ipv4_address}"
 }

@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${linode_instance.csaf.ip_address}"
+  value = "ssh -i csaf_rsa root@${linode_instance.csaf.ip_address}"
 }

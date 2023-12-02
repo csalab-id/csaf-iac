@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${huaweicloud_vpc_eip.csaf.address}"
+  value = "ssh -i csaf_rsa root@${huaweicloud_vpc_eip.csaf.address}"
 }

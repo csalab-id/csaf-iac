@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${ibm_is_floating_ip.csaf.address}"
+  value = "ssh -i csaf_rsa root@${ibm_is_floating_ip.csaf.address}"
 }

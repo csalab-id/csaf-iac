@@ -11,5 +11,5 @@ output "monitor_lab_web" {
 }
 
 output "csaf_ssh_access" {
-  value = "ssh -i csaf_rsa ubuntu@${scaleway_instance_ip.csaf.address}"
+  value = "ssh -i csaf_rsa root@${scaleway_instance_ip.csaf.address}"
 }
