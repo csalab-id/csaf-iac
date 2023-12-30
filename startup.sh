@@ -17,3 +17,4 @@ cd csaf
 docker-compose pull
 docker-compose -f generate-indexer-certs.yml run --rm generator
 docker-compose up -d
+echo "[+] CSAF installation successful"
